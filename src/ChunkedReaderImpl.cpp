@@ -55,7 +55,7 @@ public:
         return out.str();
     }
 
-    static void Log(const boost::asio::const_buffers_1 buffers, const char * /*tag*/)
+    static void Log(const boost::asio::const_buffers_1 buffers, const char * tag)
     {
         const auto buf_len = boost::asio::buffer_size(*buffers.begin());
 
