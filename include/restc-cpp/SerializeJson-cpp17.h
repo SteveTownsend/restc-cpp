@@ -1354,7 +1354,7 @@ void SerializeFromJson(
 /*! Serialize a reply to a C++ class instance */
 template <typename dataT>
 void SerializeFromJson(
-    dataT &rootData, std::unique_ptr<Reply> &&reply,
+    dataT &rootData, std::shared_ptr<Reply> &&reply,
     const JsonFieldMapping *nameMapper,
     std::int64_t maxBytes = RapidJsonDeserializer<dataT>::default_mem_limit) {
 
