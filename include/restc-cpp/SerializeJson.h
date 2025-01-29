@@ -1116,7 +1116,7 @@ template <typename T> constexpr bool is_empty_field(T &&value) {
 
 template <typename T, typename S>
 void do_serialize_integral(const T &v, S &serializer) {
-  static_assert(false, "unsupported integral type);
+  static_assert(false, "unsupported integral type");
 }
 
 template <typename S> void do_serialize_integral(const bool &v, S &serializer) {
