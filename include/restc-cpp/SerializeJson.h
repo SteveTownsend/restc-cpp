@@ -1127,12 +1127,21 @@ template <typename S> void do_serialize_integral(const char &v, S &serializer) {
   serializer.Int(v);
 }
 
+template <typename S> void do_serialize_integral(const short &v, S &serializer) {
+  serializer.Int(v);
+}
+
 template <typename S> void do_serialize_integral(const int &v, S &serializer) {
   serializer.Int(v);
 }
 
 template <typename S>
 void do_serialize_integral(const unsigned char &v, S &serializer) {
+  serializer.Uint(v);
+}
+
+template <typename S>
+void do_serialize_integral(const unsigned short &v, S &serializer) {
   serializer.Uint(v);
 }
 
