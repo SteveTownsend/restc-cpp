@@ -1014,7 +1014,7 @@ template <typename T> constexpr bool is_empty_field(T &&value) {
 
 template <typename T, typename S>
 void do_serialize_integral(const T &v, S &serializer) {
-  assert(false);
+  static_assert(false, "unsupported integral type");
 }
 
 template <typename S> void do_serialize_integral(const bool &v, S &serializer) {
@@ -1022,6 +1022,10 @@ template <typename S> void do_serialize_integral(const bool &v, S &serializer) {
 }
 
 template <typename S> void do_serialize_integral(const char &v, S &serializer) {
+  serializer.Int(v);
+}
+
+template <typename S> void do_serialize_integral(const short &v, S &serializer) {
   serializer.Int(v);
 }
 
