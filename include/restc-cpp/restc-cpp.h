@@ -29,7 +29,6 @@
 #include "restc-cpp/boost_compatibility.h"
 #include "restc-cpp/helper.h"
 
-
 #if defined(_MSC_VER) || defined(__MINGW32__)
 // Thank you Microsoft for making every developers day productive
 #ifdef min
@@ -155,6 +154,8 @@ public:
 
     bool tcpNodelay = true;
     int maxRedirects = 3;
+    int maxRetries = 8;
+    int maxIORetries = 32;
     int connectTimeoutMs = (1000 * 12);
     int sendTimeoutMs = (1000 * 12);  // For each IO operation
     int replyTimeoutMs = (1000 * 21); // For the reply header

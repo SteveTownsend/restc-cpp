@@ -7,7 +7,6 @@
 #include <iostream>
 #include <thread>
 
-
 #include <boost/exception/all.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 
@@ -183,12 +182,13 @@ public:
     static const string content_type{"Content-Type"};
     static const string json_type{"application/json; charset=utf-8"};
 
-    if (properties)
+    if (properties) {
       *default_connection_properties_ = *properties;
 
-    if (default_connection_properties_->headers.find(content_type) ==
-        default_connection_properties_->headers.end()) {
-      default_connection_properties_->headers[content_type] = json_type;
+      if (default_connection_properties_->headers.find(content_type) ==
+          default_connection_properties_->headers.end()) {
+        default_connection_properties_->headers[content_type] = json_type;
+      }
     }
 
     pool_ = ConnectionPool::Create(*this);

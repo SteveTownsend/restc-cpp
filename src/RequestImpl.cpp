@@ -702,7 +702,7 @@ private:
       const auto endpoint = it->endpoint();
       RESTC_CPP_LOG_TRACE_("Trying endpoint " << endpoint);
 
-      for (size_t retries = 0; retries < 8; ++retries) {
+      for (size_t retries = 0; retries < properties_->maxRetries; ++retries) {
         // Get a connection from the pool
         auto connection =
             owner_.GetConnectionPool()->GetConnection(endpoint, protocol_type);
@@ -791,7 +791,7 @@ private:
 
           if (ex.code() ==
               boost::system::errc::resource_unavailable_try_again) {
-            if (retries < 8) {
+            if (retries < properties_->maxRetries) {
               RESTC_CPP_LOG_DEBUG_("RequestImpl::Connect:: Caught "
                                    "boost::system::system_error exception: \""
                                    << ex.what() << "\" while connecting to "
@@ -943,6 +943,7 @@ private:
 
     DataReader::ReadConfig cfg;
     cfg.msReadTimeout = properties_->recvTimeout;
+    cfg.maxRetries = properties_->maxIORetries;
     auto reply =
         ReplyImpl::Create(connection_, ctx, owner_, properties_, request_type_);
 

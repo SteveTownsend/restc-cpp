@@ -3,14 +3,14 @@
 #ifndef RESTC_CPP_DATA_READER_H_
 #define RESTC_CPP_DATA_READER_H_
 
-
 #include <algorithm>
 
 #include <boost/asio.hpp>
 #include <boost/utility/string_ref.hpp>
 
-#include "restc-cpp.h"
 #include "error.h"
+#include "restc-cpp.h"
+
 
 namespace restc_cpp {
 
@@ -31,31 +31,33 @@ class DataReaderStream;
  */
 class DataReader {
 public:
+  struct ReadConfig {
+    int msReadTimeout = 0;
+    int maxRetries = 32;
+  };
 
-    struct ReadConfig {
-        int msReadTimeout = 0;
-    };
+  using ptr_t = std::unique_ptr<DataReader>;
+  using add_header_fn_t =
+      std::function<void(std::string &&name, std::string &&value)>;
 
+  DataReader() = default;
+  virtual ~DataReader() = default;
 
-    using ptr_t = std::unique_ptr<DataReader>;
-    using add_header_fn_t = std::function<void(std::string&& name, std::string&& value)>;
+  virtual bool IsEof() const = 0;
+  virtual boost_const_buffer ReadSome() = 0;
+  virtual void
+  Finish() = 0; // Make sure there are no pending data for the current request
 
-    DataReader() = default;
-    virtual ~DataReader() = default;
-
-    virtual bool IsEof() const = 0;
-    virtual boost_const_buffer ReadSome() = 0;
-    virtual void Finish() = 0; // Make sure there are no pending data for the current request
-
-    static ptr_t CreateIoReader(const Connection::ptr_t& conn,
-                                Context& ctx, const ReadConfig& cfg);
-    static ptr_t CreateGzipReader(std::unique_ptr<DataReader>&& source);
-    static ptr_t CreateZipReader(std::unique_ptr<DataReader>&& source);
-    static ptr_t CreatePlainReader(size_t contentLength, ptr_t&& source);
-    static ptr_t CreateChunkedReader(add_header_fn_t, std::unique_ptr<DataReaderStream>&& source);
-    static ptr_t CreateNoBodyReader();
+  static ptr_t CreateIoReader(const Connection::ptr_t &conn, Context &ctx,
+                              const ReadConfig &cfg);
+  static ptr_t CreateGzipReader(std::unique_ptr<DataReader> &&source);
+  static ptr_t CreateZipReader(std::unique_ptr<DataReader> &&source);
+  static ptr_t CreatePlainReader(size_t contentLength, ptr_t &&source);
+  static ptr_t CreateChunkedReader(add_header_fn_t,
+                                   std::unique_ptr<DataReaderStream> &&source);
+  static ptr_t CreateNoBodyReader();
 };
 
-} // namespace
+} // namespace restc_cpp
 
 #endif // RESTC_CPP_DATA_READER_H_
