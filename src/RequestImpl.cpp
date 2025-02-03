@@ -478,8 +478,10 @@ private:
     constexpr auto http_407 = 407;
     constexpr auto http_408 = 408;
 
-    const auto &response = reply.GetHttpResponse();
+    auto &response = reply.GetHttpResponse();
     if ((response.status_code / magic_100) > magic_2) {
+      const_cast<restc_cpp::Reply::HttpResponse &>(response).body =
+          const_cast<Reply &>(reply).GetBodyAsString();
       switch (response.status_code) {
       case http_401:
         throw HttpAuthenticationException(response);

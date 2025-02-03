@@ -223,6 +223,7 @@ public:
     HttpVersion http_version = HttpVersion::HTTP_1_1;
     int status_code = 0;
     std::string reason_phrase;
+    std::string body; // for errors
   };
 
   virtual ~Reply() = default;
