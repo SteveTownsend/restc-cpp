@@ -12,11 +12,12 @@ struct RestcCppException : public std::runtime_error {
 };
 
 struct RequestFailedWithErrorException : public RestcCppException {
-
+  static constexpr size_t MaxResponseBody = 1024;
   RequestFailedWithErrorException(const Reply::HttpResponse &response)
       : RestcCppException(std::string("Request failed with HTTP error: ") +
                           std::to_string(response.status_code) + " " +
-                          response.reason_phrase + " " + response.body),
+                          response.reason_phrase + " " +
+                          response.body.substr(0, MaxResponseBody)),
         http_response{response} {}
 
   const Reply::HttpResponse http_response;
