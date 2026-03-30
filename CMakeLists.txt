@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.28)
 
 
 if (DEFINED ENV{RESTC_CPP_VERSION})
