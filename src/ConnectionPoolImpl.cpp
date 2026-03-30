@@ -14,6 +14,7 @@
 #include "restc-cpp/ConnectionPool.h"
 #include "restc-cpp/error.h"
 #include "restc-cpp/internals/helpers.h"
+#include "restc-cpp/boost_compatibility.h"
 #include "restc-cpp/logging.h"
 
 #include "ConnectionImpl.h"
@@ -219,8 +220,8 @@ public:
 private:
   void ScheduleNextCacheCleanup() {
     LOCK_ALWAYS_;
-    cache_cleanup_timer_.expires_from_now(
-        boost::posix_time::seconds(properties_->cacheCleanupIntervalSeconds));
+    cache_cleanup_timer_.RESTC_CPP_STEADY_TIMER_EXPIRES_AFTER(
+        std::chrono::seconds(properties_->cacheCleanupIntervalSeconds));
     cache_cleanup_timer_.async_wait(
         [capture0 = shared_from_this()](auto &&PH1) {
           capture0->OnCacheCleanup(std::forward<decltype(PH1)>(PH1));
@@ -419,7 +420,7 @@ private:
   // std::queue<Entry> pending_;
   const Request::Properties::ptr_t properties_;
   ConnectionWrapper::release_callback_t on_release_;
-  boost::asio::deadline_timer cache_cleanup_timer_;
+  boost::asio::steady_timer cache_cleanup_timer_;
 
   mutable std::mutex mutex_;
 }; // ConnectionPoolImpl

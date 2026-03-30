@@ -11,6 +11,7 @@
 #include "restc-cpp/logging.h"
 #include "restc-cpp/Socket.h"
 #include "restc-cpp/Connection.h"
+#include "restc-cpp/boost_compatibility.h"
 
 namespace restc_cpp {
 
@@ -145,8 +146,7 @@ private:
 
     void Start(int millisecondsTimeOut)
     {
-        timer_.expires_from_now(
-            boost::posix_time::milliseconds(millisecondsTimeOut));
+        timer_.RESTC_CPP_STEADY_TIMER_EXPIRES_AFTER(std::chrono::milliseconds{millisecondsTimeOut});
         is_active_ = true;
         try {
             timer_.async_wait(std::bind(
@@ -162,7 +162,7 @@ private:
     bool is_active_ = false;
     bool is_expiered_ = false;
     close_t close_;
-    boost::asio::deadline_timer timer_;
+    boost::asio::steady_timer timer_;
     const std::string timer_name_;
 };
 
